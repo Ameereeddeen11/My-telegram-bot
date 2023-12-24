@@ -4,7 +4,7 @@ from telegram.ext import Application, CommandHandler, MessageHandler, filters, C
 import os
 
 user_name = os.environ.get('USER_NAME')
-token = '6733797420:AAHjTa5lXODIVc0rRvsaK9agynEEnrfY_X0' #os.environ.get('TOKEN')
+token: str = os.environ.get('TOKEN')
 
 # Command handlers
 async def start_command(update: Update, context: ContextTypes.DEFAULT_TYPE):
