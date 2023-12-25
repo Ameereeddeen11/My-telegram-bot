@@ -1,10 +1,13 @@
 from typing import Final
 from telegram import Update
 from telegram.ext import Application, CommandHandler, MessageHandler, filters, ContextTypes
-import os
+import os, json, datetime
 
 user_name = os.environ.get('USER_NAME')
 token: str = os.environ.get('TOKEN')
+
+with open('data.json', 'r') as f:
+    data = json.load(f)
 
 # Command handlers
 async def start_command(update: Update, context: ContextTypes.DEFAULT_TYPE):
@@ -27,6 +30,20 @@ def message_handler(text: str) -> str:
 
     elif 'happy christmas' in processed_text:
         return 'Merry Christmas!'
+
+    elif 'who has birthday today?' or 'who will have birthday near a day?' in processed_text:
+        now = datetime.date.today()
+        today = now.strftime('%d.%m')
+        day = int(today.split('.'))
+        date = data['date']
+        for i in date:
+            if i['birthday'] == today:
+                return f'Today is birthday of: {i["name"]}'
+            elif i['birthday'] == today + 1:
+                return f'Tomorrow will be birthday of: {i["name"]}'
+            else:
+                return 'Nobody has birthday today or tomorrow'
+
 
     return 'Sorry, I do not understand you!'
 

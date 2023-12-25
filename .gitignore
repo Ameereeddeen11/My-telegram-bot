@@ -6,6 +6,9 @@ __pycache__/
 # ignore idea files
 /.idea
 
+# ignore data file
+data.json
+
 # C extensions
 *.so
 
