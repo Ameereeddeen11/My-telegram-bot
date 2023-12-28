@@ -16,8 +16,8 @@ async def start_command(update: Update, context: ContextTypes.DEFAULT_TYPE):
 async def help_command(update: Update, context: ContextTypes.DEFAULT_TYPE):
     await update.message.reply_text('Hello!')
 
-'''async def costom_command(update: Update, context: ContextTypes.DEFAULT_TYPE):
-    await update.message.reply_text('Hello!')'''
+async def who_will_have_birthday(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    await update.message.reply_text("Hi!")
 
 # Message handlers and responses
 def message_handler(text: str) -> str:
@@ -31,19 +31,40 @@ def message_handler(text: str) -> str:
     elif 'happy christmas' in processed_text:
         return 'Merry Christmas!'
 
-    elif 'who has birthday today?' or 'who will have birthday near a day?' in processed_text:
+    elif 'who has birthday today?' in processed_text:
         now = datetime.date.today()
         today = now.strftime('%d.%m')
-        day = int(today.split('.'))
+        day_after = (now + datetime.timedelta(days=1)).strftime('%d.%m')
         date = data['date']
         for i in date:
             if i['birthday'] == today:
                 return f'Today is birthday of: {i["name"]}'
-            elif i['birthday'] == today + 1:
+            elif i['birthday'] == day_after:
                 return f'Tomorrow will be birthday of: {i["name"]}'
             else:
                 return 'Nobody has birthday today or tomorrow'
+            
+    elif 'who will have birthday near a day?' in processed_text:
+        now = datetime.date.today()
+        list_date = []
 
+        for person in data['date']:
+            # Extract month and day from the JSON data
+            bday_month, bday_day = map(int, person['birthday'].split('.'))
+
+            # Create a date object for the current year
+            bday = datetime.date(now.year, bday_month, bday_day)
+
+            # Check if birthday has passed for this year, if yes, calculate for next year
+            if bday < now:
+                bday = datetime.date(now.year + 1, bday_month, bday_day)
+
+            list_date.append(bday)
+
+        # Calculate the differences
+        differences = [date - now for date in list_date]
+        min_difference = min(differences)
+        return f"The closest upcoming birthday is in {min_difference.days} days."
 
     return 'Sorry, I do not understand you!'
 
