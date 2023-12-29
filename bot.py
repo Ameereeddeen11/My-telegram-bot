@@ -64,7 +64,7 @@ def message_handler(text: str) -> str:
         # Calculate the differences
         differences = [date - now for date in list_date]
         min_difference = min(differences)
-        return f"The closest upcoming birthday is in {min_difference.days} days."
+        return f"The closest upcoming birthday is in {min_difference.days} days. {data['date'][differences.index(min_difference)]['name']}'s birthday"
 
     return 'Sorry, I do not understand you!'
 
