@@ -1,10 +1,12 @@
 from typing import Final
 from telegram import Update
 from telegram.ext import Application, CommandHandler, MessageHandler, filters, ContextTypes
-import os, json, datetime
+from pprint import pprint
+import os, json, datetime, requests
 
 user_name = os.environ.get('USER_NAME')
-token: str = os.environ.get('TOKEN')
+token: str = "6733797420:AAHjTa5lXODIVc0rRvsaK9agynEEnrfY_X0"#os.environ.get('TOKEN')
+API_KEY = "bbd0a0ad71e74b0e8f350bd2bae69bb6"#os.environ.get('API_KEY')
 
 with open('data.json', 'r') as f:
     data = json.load(f)
@@ -15,9 +17,6 @@ async def start_command(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
 async def help_command(update: Update, context: ContextTypes.DEFAULT_TYPE):
     await update.message.reply_text('Hello!')
-
-async def who_will_have_birthday(update: Update, context: ContextTypes.DEFAULT_TYPE):
-    await update.message.reply_text("Hi!")
 
 # Message handlers and responses
 def message_handler(text: str) -> str:
@@ -65,6 +64,13 @@ def message_handler(text: str) -> str:
         differences = [date - now for date in list_date]
         min_difference = min(differences)
         return f"The closest upcoming birthday is in {min_difference.days} days. {data['date'][differences.index(min_difference)]['name']}'s birthday"
+
+    elif "what is the weather in" in processed_text:
+        city = processed_text.split("in", 1)[1]
+        url = "http://api.openweathermap.org/data/2.5/weather?appid="+API_KEY+"&q="+city+"&units=metric"
+        response = requests.get(url).json()
+        pprint(response)
+        return f"The weather in {city} is {response['weather'][0]['description']}. The temperature is {response['main']['temp']}°C. The wind speed is {response['wind']['speed']} m/s."
 
     return 'Sorry, I do not understand you!'
 
