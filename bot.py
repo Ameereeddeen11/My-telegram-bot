@@ -5,8 +5,8 @@ from pprint import pprint
 import os, json, datetime, requests
 
 user_name = os.environ.get('USER_NAME')
-token: str = "6733797420:AAHjTa5lXODIVc0rRvsaK9agynEEnrfY_X0"#os.environ.get('TOKEN')
-API_KEY = "bbd0a0ad71e74b0e8f350bd2bae69bb6"#os.environ.get('API_KEY')
+token: str = os.environ.get('TOKEN')
+API_KEY = os.environ.get('API_KEY')
 
 with open('data.json', 'r') as f:
     data = json.load(f)
