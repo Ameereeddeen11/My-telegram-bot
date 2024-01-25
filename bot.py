@@ -1,3 +1,4 @@
+import random
 from typing import Final
 from telegram import Update
 from telegram.ext import Application, CommandHandler, MessageHandler, filters, ContextTypes
@@ -69,8 +70,22 @@ def message_handler(text: str) -> str:
         city = processed_text.split("in", 1)[1]
         url = "http://api.openweathermap.org/data/2.5/weather?appid="+API_KEY+"&q="+city+"&units=metric"
         response = requests.get(url).json()
-        pprint(response)
         return f"The weather in {city} is {response['weather'][0]['description']}. The temperature is {response['main']['temp']}°C. The wind speed is {response['wind']['speed']} m/s."
+
+    elif "let's play number guessing game" in processed_text:
+        isresultcorrect: bool = False
+        number: int = random.randint(1, 10)
+        while not isresultcorrect:
+            guess = int(input('Guess a number between 1 and 10: '))
+            if guess == number:
+                return 'Congratulations! You guessed the number correctly!'
+                break
+            elif guess > number:
+                return 'Your guess is high'
+            elif guess < number:
+                return 'Your guess is low'
+            else:
+                return 'Invalid input'
 
     return 'Sorry, I do not understand you!'
 
